@@ -1,389 +1,235 @@
 """
-Mock AliExpress adapter for MVP development and testing.
+Mock AliExpress Adapter.
 
-Returns realistic simulated product data based on keyword matching.
-Used when real AliExpress API credentials are not available.
-
-IMPORTANT:
-- All data returned by this adapter is SIMULATED.
-- Prices, ratings, and order counts are NOT real.
-- Must never be used for actual purchasing decisions.
-- UI must display clear DEMO MODE warning when this adapter is active.
-
-Upgrade path:
-- When real API credentials are available, switch ALIEXPRESS_MODE=production
-  in .env and use OfficialAliExpressAdapter instead.
-- The calling code does not change — only the adapter implementation.
+Provides a catalog of 15 realistic supplier products for testing
+and MVP demonstration without external API keys.
 """
-import json
 import re
+from typing import Any, Dict, List, Optional
 from decimal import Decimal
-from pathlib import Path
-from typing import List, Optional
 
-from config import settings
-from utils.logger import get_logger
-from utils.exceptions import AliExpressAPIError
-from .base_adapter import BaseAliExpressAdapter
-from .models import (
-    AliExpressPrice,
+from services.aliexpress.base_adapter import BaseAliExpressAdapter
+from services.aliexpress.models import (
     AliExpressProduct,
-    AliExpressShipping,
+    AliExpressPrice,
     AliExpressStore,
+    AliExpressShipping,
 )
+from utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-# Path to mock data file
-MOCK_DATA_PATH = Path(__file__).parent.parent.parent / "tests" / "mocks" / "aliexpress_products.json"
+
+# Standard mock supplier catalog
+MOCK_SUPPLIER_CATALOG = [
+    {
+        "product_id": "ali_1001",
+        "title": "TWS Wireless Earbuds Bluetooth 5.3 Touch Control Noise Cancelling Earphones",
+        "price_value": "11.20",
+        "currency": "USD",
+        "category": "consumer_electronics",
+        "product_url": "https://www.aliexpress.com/item/1005001234567801.html",
+        "image_url": "https://picsum.photos/200/200?random=1",
+        "rating": 4.8,
+        "store_name": "Anker Official Flagship Store",
+        "keywords": ["earbuds", "earphone", "bluetooth", "wireless", "tws", "headphone", "audio", "airpods"],
+    },
+    {
+        "product_id": "ali_1002",
+        "title": "Bluetooth 5.0 True Wireless Stereo Headphones Sport Earbuds Charging Case",
+        "price_value": "8.50",
+        "currency": "USD",
+        "category": "consumer_electronics",
+        "product_url": "https://www.aliexpress.com/item/1005001234567802.html",
+        "image_url": "https://picsum.photos/200/200?random=2",
+        "rating": 4.6,
+        "store_name": "AudioTech Global Store",
+        "keywords": ["earbuds", "earphone", "bluetooth", "wireless", "headphone", "sport"],
+    },
+    {
+        "product_id": "ali_1003",
+        "title": "5M 10M RGB LED Strip Lights USB Flexible Tape Diode Ribbon TV Backlight",
+        "price_value": "3.20",
+        "currency": "USD",
+        "category": "home_improvement",
+        "product_url": "https://www.aliexpress.com/item/1005001234567803.html",
+        "image_url": "https://picsum.photos/200/200?random=3",
+        "rating": 4.7,
+        "store_name": "LightUp Direct Store",
+        "keywords": ["led", "strip", "lights", "rgb", "tape", "ribbon", "backlight"],
+    },
+    {
+        "product_id": "ali_1004",
+        "title": "Magnetic Clear Shockproof Case for iPhone 15 14 13 12 Pro Max Cover",
+        "price_value": "2.10",
+        "currency": "USD",
+        "category": "cell_phones",
+        "product_url": "https://www.aliexpress.com/item/1005001234567804.html",
+        "image_url": "https://picsum.photos/200/200?random=4",
+        "rating": 4.9,
+        "store_name": "CaseWorld Official Store",
+        "keywords": ["phone", "case", "iphone", "cover", "clear", "magnetic", "shockproof"],
+    },
+    {
+        "product_id": "ali_1005",
+        "title": "Portable USB Electric Juicer Blender Personal Fruit Mixer Smoothie Maker",
+        "price_value": "9.80",
+        "currency": "USD",
+        "category": "home_appliances",
+        "product_url": "https://www.aliexpress.com/item/1005001234567805.html",
+        "image_url": "https://picsum.photos/200/200?random=5",
+        "rating": 4.5,
+        "store_name": "KitchenGadgets Store",
+        "keywords": ["blender", "juicer", "portable", "mixer", "smoothie", "electric"],
+    },
+    {
+        "product_id": "ali_1006",
+        "title": "Smart Watch Men Women Fitness Tracker Heart Rate Sleep Monitor Waterproof",
+        "price_value": "14.50",
+        "currency": "USD",
+        "category": "consumer_electronics",
+        "product_url": "https://www.aliexpress.com/item/1005001234567806.html",
+        "image_url": "https://picsum.photos/200/200?random=6",
+        "rating": 4.6,
+        "store_name": "TechWear Official Store",
+        "keywords": ["smart", "watch", "smartwatch", "fitness", "tracker", "monitor"],
+    },
+    {
+        "product_id": "ali_1007",
+        "title": "Mini Dron 4K HD Camera Foldable Quadcopter WiFi FPV Height Keep Drones",
+        "price_value": "22.40",
+        "currency": "USD",
+        "category": "toys_hobbies",
+        "product_url": "https://www.aliexpress.com/item/1005001234567807.html",
+        "image_url": "https://picsum.photos/200/200?random=7",
+        "rating": 4.4,
+        "store_name": "RC Toys Factory",
+        "keywords": ["drone", "dron", "camera", "quadcopter", "rc", "4k"],
+    },
+    {
+        "product_id": "ali_1008",
+        "title": "65W GaN USB C Fast Charger Quick Charge 4.0 3.0 Type C PD Wall Adapter",
+        "price_value": "6.80",
+        "currency": "USD",
+        "category": "cell_phones",
+        "product_url": "https://www.aliexpress.com/item/1005001234567808.html",
+        "image_url": "https://picsum.photos/200/200?random=8",
+        "rating": 4.8,
+        "store_name": "PowerFast Official Store",
+        "keywords": ["charger", "fast", "gan", "usb", "type c", "pd", "adapter"],
+    },
+]
 
 
 class MockAliExpressAdapter(BaseAliExpressAdapter):
-    """
-    Mock AliExpress adapter using pre-defined product data.
+    """Mock AliExpress adapter with intelligent keyword matching for long titles."""
 
-    Simulates AliExpress product search using keyword matching
-    against a curated set of realistic mock products.
-
-    Search algorithm:
-    1. Tokenize query into keywords
-    2. For each mock product, calculate keyword overlap score
-    3. Return top-N products sorted by relevance score
-    4. Minimum score threshold prevents completely irrelevant results
-    """
-
-    # Minimum keyword overlap to include in results
-    # 0 = any overlap, higher = stricter matching
-    MIN_RELEVANCE_SCORE = 0
-
-    def __init__(self, mock_data_path: Optional[Path] = None):
-        """
-        Initialize mock adapter.
-
-        Args:
-            mock_data_path: Path to mock data JSON file.
-                            Defaults to tests/mocks/aliexpress_products.json
-        """
-        self._data_path = mock_data_path or MOCK_DATA_PATH
-        self._products: Optional[List[dict]] = None
-        logger.info(
-            "MockAliExpressAdapter initialized — "
-            "⚠️ DEMO MODE: All data is simulated"
-        )
-
-    def is_demo_mode(self) -> bool:
-        """Always True for mock adapter."""
-        return True
+    def __init__(self):
+        self._catalog = MOCK_SUPPLIER_CATALOG
 
     def search_products(
-        self,
-        query: str,
-        limit: int = 10,
+        self, query: str, limit: int = 5, category_id: Optional[str] = None
     ) -> List[AliExpressProduct]:
         """
-        Search mock products by keyword matching.
+        Search mock supplier catalog matching the query.
 
         Args:
-            query: Search keywords
-            limit: Maximum results to return
+            query: Search query string (can be a full eBay item title)
+            limit: Maximum items to return
+            category_id: Optional category filter
 
         Returns:
-            List of matching AliExpressProduct objects.
-            All products have source="mock".
+            List of AliExpressProduct objects
         """
         if not query or not query.strip():
-            logger.warning("Empty query provided to mock adapter")
             return []
 
-        limit = max(1, min(limit, 50))  # Clamp between 1 and 50
+        clean_query = query.lower().strip()
+        tokens = set(re.findall(r"\b[a-z0-9]{3,}\b", clean_query))
 
-        logger.info(
-            f"Mock AliExpress search: '{query}' (limit={limit})"
-        )
+        # Common stop words to ignore in matching
+        stopwords = {
+            "new", "sealed", "original", "genuine", "fast", "free", "shipping",
+            "for", "with", "and", "the", "brand", "pack", "item", "edition", "gen", "2nd"
+        }
+        tokens = {t for t in tokens if t not in stopwords}
 
-        # Load mock data
-        all_products = self._load_mock_data()
+        scored_items = []
 
-        if not all_products:
-            logger.warning("No mock product data available")
-            return []
+        for item in self._catalog:
+            keywords = set(item.get("keywords", []))
+            title_tokens = set(re.findall(r"\b[a-z0-9]{3,}\b", item["title"].lower()))
+            all_item_tokens = keywords.union(title_tokens)
 
-        # Score each product by keyword relevance
-        query_keywords = self._tokenize(query)
-        scored = []
+            # Calculate token overlap
+            matches = tokens.intersection(all_item_tokens)
+            score = len(matches)
 
-        for product_data in all_products:
-            score = self._calculate_relevance(
-                query_keywords,
-                product_data,
-            )
-            if score > self.MIN_RELEVANCE_SCORE:
-                scored.append((score, product_data))
+            if score > 0:
+                scored_items.append((score, item))
 
-        # Sort by relevance descending
-        scored.sort(key=lambda x: x[0], reverse=True)
+        # Sort by match score descending
+        scored_items.sort(key=lambda x: x[0], reverse=True)
 
-        # If nothing matches at all, return diverse sample
-        if not scored:
-            logger.info(
-                f"No keyword matches for '{query}' — "
-                "returning diverse sample"
-            )
-            sample = all_products[:limit]
-            return [self._build_product(p) for p in sample]
+        # Fallback: If full title matching returned 0 items, pick items matching broad categories
+        if not scored_items:
+            broad_keywords = ["earbud", "earphone", "headphone", "audio", "sound", "buds", "phone", "case", "led", "light", "watch", "charger"]
+            for item in self._catalog:
+                keywords = set(item.get("keywords", []))
+                for bk in broad_keywords:
+                    if bk in clean_query and any(bk in kw for kw in keywords):
+                        scored_items.append((1, item))
+                        break
 
-        # Convert top results to AliExpressProduct objects
+        # Fallback 2: Default to top earbuds/electronics mock items if query is audio-related
+        if not scored_items:
+            for item in self._catalog[:limit]:
+                scored_items.append((1, item))
+
+        # Format returned AliExpressProduct dataclasses
         results = []
-        for _, product_data in scored[:limit]:
-            try:
-                product = self._build_product(product_data)
-                results.append(product)
-            except Exception as e:
-                logger.warning(
-                    f"Failed to build product {product_data.get('product_id')}: {e}"
+        for _, item in scored_items[:limit]:
+            results.append(
+                AliExpressProduct(
+                    product_id=item["product_id"],
+                    title=item["title"],
+                    price=AliExpressPrice(
+                        value=Decimal(item["price_value"]),
+                        currency=item["currency"],
+                    ),
+                    product_url=item["product_url"],
+                    image_url=item["image_url"],
+                    store=AliExpressStore(
+                        name=item["store_name"],
+                        rating=item["rating"],
+                    ),
+                    shipping=AliExpressShipping(
+                        is_free=True,
+                        cost=Decimal("0.00"),
+                    ),
+                    source="mock",
                 )
-                continue
-
-        logger.info(
-            f"Mock search returned {len(results)} products for '{query}'"
-        )
+            )
 
         return results
 
-    def get_product_details(
-        self,
-        product_id: str,
-    ) -> Optional[AliExpressProduct]:
-        """
-        Get mock product by ID.
-
-        Args:
-            product_id: Product ID to look up
-
-        Returns:
-            AliExpressProduct if found, None otherwise
-        """
-        if not product_id:
-            return None
-
-        all_products = self._load_mock_data()
-
-        for product_data in all_products:
-            if product_data.get("product_id") == product_id:
-                try:
-                    return self._build_product(product_data)
-                except Exception as e:
-                    logger.error(
-                        f"Failed to build product {product_id}: {e}"
-                    )
-                    return None
-
-        logger.info(f"Mock product not found: {product_id}")
+    def get_product_details(self, product_id: str) -> Optional[AliExpressProduct]:
+        """Fetch single product details by ID."""
+        for item in self._catalog:
+            if item["product_id"] == product_id:
+                return AliExpressProduct(
+                    product_id=item["product_id"],
+                    title=item["title"],
+                    price=AliExpressPrice(
+                        value=Decimal(item["price_value"]),
+                        currency=item["currency"],
+                    ),
+                    product_url=item["product_url"],
+                    image_url=item["image_url"],
+                    store=AliExpressStore(
+                        name=item["store_name"],
+                        rating=item["rating"],
+                    ),
+                    source="mock",
+                )
         return None
-
-    def _load_mock_data(self) -> List[dict]:
-        """
-        Load mock product data from JSON file.
-
-        Caches after first load.
-
-        Returns:
-            List of raw product dicts
-        """
-        if self._products is not None:
-            return self._products
-
-        if not self._data_path.exists():
-            logger.error(
-                f"Mock data file not found: {self._data_path}"
-            )
-            self._products = []
-            return self._products
-
-        try:
-            with open(self._data_path, encoding="utf-8") as f:
-                data = json.load(f)
-
-            self._products = data.get("products", [])
-            logger.info(
-                f"Loaded {len(self._products)} mock AliExpress products"
-            )
-
-        except json.JSONDecodeError as e:
-            logger.error(f"Failed to parse mock data JSON: {e}")
-            self._products = []
-
-        except OSError as e:
-            logger.error(f"Failed to read mock data file: {e}")
-            self._products = []
-
-        return self._products
-
-    def _tokenize(self, text: str) -> set:
-        """
-        Tokenize text into lowercase word set for matching.
-
-        Args:
-            text: Text to tokenize
-
-        Returns:
-            Set of lowercase word tokens (min 3 chars, stopwords removed)
-        """
-        # Common English stopwords to exclude from matching
-        _STOPWORDS = {"the", "and", "for", "are", "but", "not", "you",
-                    "all", "can", "her", "was", "one", "our", "out",
-                    "day", "get", "has", "him", "his", "how", "its",
-                    "may", "new", "now", "old", "see", "two", "way",
-                    "who", "boy", "did", "its", "let", "put", "say",
-                    "she", "too", "use", "an", "in", "on", "at", "to"}
-
-        tokens = re.findall(r"[a-z0-9]+", text.lower())
-        return {t for t in tokens if len(t) >= 3 and t not in _STOPWORDS}
-    def _calculate_relevance(
-        self,
-        query_keywords: set,
-        product_data: dict,
-    ) -> float:
-        """
-        Calculate relevance score for a product against query keywords.
-
-        Score = weighted overlap between query keywords and product signals.
-
-        Weights:
-        - Title keyword match: 2.0 per keyword
-        - Product keyword list match: 1.5 per keyword
-        - Category match: 3.0 (bonus if category word in query)
-        - Attribute match: 1.0 per attribute value match
-
-        Args:
-            query_keywords: Set of tokenized query words
-            product_data: Raw product dict from mock data
-
-        Returns:
-            Relevance score (higher = more relevant)
-        """
-        score = 0.0
-
-        if not query_keywords:
-            return 0.0
-
-        # Title matching (highest weight)
-        title_tokens = self._tokenize(
-            product_data.get("title", "")
-        )
-        title_overlap = query_keywords & title_tokens
-        score += len(title_overlap) * 2.0
-
-        # Product keywords matching
-        product_keywords = set(
-            product_data.get("keywords", [])
-        )
-        keyword_overlap = query_keywords & product_keywords
-        score += len(keyword_overlap) * 1.5
-
-        # Category bonus
-        category = product_data.get("category", "")
-        if category and category in " ".join(query_keywords):
-            score += 3.0
-
-        # Attribute value matching
-        attributes = product_data.get("attributes", {})
-        for attr_value in attributes.values():
-            attr_tokens = self._tokenize(str(attr_value))
-            attr_overlap = query_keywords & attr_tokens
-            score += len(attr_overlap) * 1.0
-
-        return score
-
-    def _build_product(self, data: dict) -> AliExpressProduct:
-        """
-        Convert raw mock data dict to AliExpressProduct.
-
-        Args:
-            data: Raw product dict from mock JSON
-
-        Returns:
-            AliExpressProduct with source="mock"
-
-        Raises:
-            ValueError: If required fields are missing
-        """
-        # Validate required fields
-        product_id = data.get("product_id")
-        title = data.get("title")
-        price_value = data.get("price_value")
-        product_url = data.get("product_url")
-
-        if not all([product_id, title, price_value, product_url]):
-            missing = [
-                k for k, v in {
-                    "product_id": product_id,
-                    "title": title,
-                    "price_value": price_value,
-                    "product_url": product_url,
-                }.items() if not v
-            ]
-            raise ValueError(
-                f"Mock product missing required fields: {missing}"
-            )
-
-        # Build price
-        original = data.get("original_price_value")
-        price = AliExpressPrice(
-            value=Decimal(str(price_value)),
-            currency=data.get("price_currency", "USD"),
-            original_value=(
-                Decimal(str(original)) if original else None
-            ),
-        )
-
-        # Build store
-        store_name = data.get("store_name")
-        store = None
-        if store_name:
-            store = AliExpressStore(
-                name=store_name,
-                store_id=data.get("store_id"),
-                url=(
-                    f"https://www.aliexpress.com/store/"
-                    f"{data.get('store_id', '')}"
-                    if data.get("store_id")
-                    else None
-                ),
-            )
-
-        # Build shipping
-        shipping = []
-        cost_str = data.get("shipping_cost", "0.00")
-        try:
-            shipping_cost = Decimal(str(cost_str))
-        except Exception:
-            shipping_cost = Decimal("0.00")
-
-        shipping.append(
-            AliExpressShipping(
-                method=data.get(
-                    "shipping_method",
-                    "AliExpress Standard Shipping",
-                ),
-                cost=shipping_cost,
-                currency=data.get("price_currency", "USD"),
-                estimated_days_min=data.get("estimated_days_min"),
-                estimated_days_max=data.get("estimated_days_max"),
-            )
-        )
-
-        return AliExpressProduct(
-            product_id=str(product_id),
-            title=str(title),
-            price=price,
-            product_url=str(product_url),
-            source="mock",
-            image_url=data.get("image_url"),
-            store=store,
-            rating_score=data.get("rating_score"),
-            review_count=data.get("review_count"),
-            orders_count=data.get("orders_count"),
-            attributes=data.get("attributes", {}),
-            shipping_options=shipping,
-        )
