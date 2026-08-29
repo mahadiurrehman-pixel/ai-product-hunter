@@ -217,14 +217,20 @@ class Settings(BaseSettings):
             )
 
     def ensure_directories(self) -> None:
-        """Create necessary directories if they don't exist."""
-        for directory in [
-            self.data_dir,
-            self.cache_dir,
-            self.logs_dir,
-            self.exports_dir,
-        ]:
-            directory.mkdir(parents=True, exist_ok=True)
+        """Ensure required data and cache directories exist."""
+        directories = [
+            Path("data"),
+            Path("data/cache"),
+            Path("data/backups"),
+            Path("/app/data") if Path("/app").exists() else Path("data"),
+            Path("/app/data/cache") if Path("/app").exists() else Path("data/cache"),
+        ]
+        for directory in directories:
+            try:
+                directory.mkdir(parents=True, exist_ok=True)
+            except (PermissionError, OSError) as e:
+                # In container/cloud volume environments, permissions are handled by entrypoint
+                pass
 
     def model_post_init(self, __context) -> None:
         """Post-initialization validation and setup."""

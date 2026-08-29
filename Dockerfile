@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl bash && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY config/ config/
 COPY database/ database/
@@ -22,8 +22,10 @@ COPY scripts/ scripts/
 COPY utils/ utils/
 COPY app.py .
 
-# Ensure data directories exist and entrypoint is executable
-RUN mkdir -p /app/data/cache && chmod +x scripts/entrypoint.sh
+# Create directories and grant full permissions
+RUN mkdir -p /app/data /app/data/cache /app/data/backups && \
+    chmod -R 777 /app/data && \
+    chmod +x scripts/entrypoint.sh
 
 EXPOSE 8501 8080
 

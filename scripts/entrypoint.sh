@@ -1,42 +1,36 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -e
 
 echo "=== REHU Production Platform Starting ==="
 
-echo "--> Preparing persistent storage..."
+# 1. Create and grant permissions on volume mount
+mkdir -p /app/data /app/data/cache /app/data/backups /app/logs
+chmod -R 777 /app/data /app/data/cache /app/data/backups 2>/dev/null || true
 
-mkdir -p /app/data/cache
-mkdir -p /app/data/exports
-mkdir -p /app/logs
-
-chown -R rehu:rehu /app/data /app/logs
-
-echo "--> Storage permissions ready."
-
+# 2. Initialize database schema
 echo "--> Initializing database..."
-
-su -s /bin/bash rehu -c '
 python -c "
 import sys
-sys.path.insert(0, \"/app\")
+sys.path.insert(0, '/app')
 from database import init_db
 init_db()
-print(\"Database initialized.\")
+print('Database initialized.')
 "
-'
 
+# 3. Start eBay Compliance Server in background
 echo "--> Starting Compliance Server (port 8080)..."
-su -s /bin/bash rehu -c \
-    "python scripts/run_compliance_server.py" &
+python scripts/run_compliance_server.py &
 COMPLIANCE_PID=$!
 
+# 4. Start Streamlit UI in foreground
 echo "--> Starting Streamlit UI (port 8501)..."
-su -s /bin/bash rehu -c \
-    "streamlit run app.py \
-        --server.port=8501 \
-        --server.address=0.0.0.0 \
-        --server.headless=true \
-        --browser.gatherUsageStats=false" &
+streamlit run app.py \
+    --server.port=8501 \
+    --server.address=0.0.0.0 \
+    --server.headless=true \
+    --browser.gatherUsageStats=false \
+    --theme.primaryColor="#2563EB" \
+    --theme.backgroundColor="#F8FAFC" &
 STREAMLIT_PID=$!
 
 cleanup() {
@@ -52,11 +46,10 @@ cleanup() {
 trap cleanup SIGINT SIGTERM
 
 echo "=== REHU Platform Ready ==="
-echo "  UI:         http://localhost:8501"
-echo "  Compliance: http://localhost:8080"
+echo "  UI:         http://0.0.0.0:8501"
+echo "  Compliance: http://0.0.0.0:8080"
 
 wait -n "$COMPLIANCE_PID" "$STREAMLIT_PID"
 EXIT_CODE=$?
-
 echo "--> A service exited unexpectedly (code $EXIT_CODE). Shutting down."
 cleanup
