@@ -24,18 +24,10 @@ COPY scripts/ scripts/
 COPY utils/ utils/
 COPY app.py .
 
-RUN mkdir -p /app/data && \
-    chmod +x scripts/entrypoint.sh 2>/dev/null || true
-
-RUN useradd -m -r rehu && chown -R rehu:rehu /app
-
-EXPOSE 8501 8080
-
-HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
-    CMD curl -sf http://localhost:8501/_stcore/health && \
-        curl -sf http://localhost:8080/health || exit 1
-
-ENTRYPOINT ["bash", "scripts/entrypoint.sh"]
+RUN mkdir -p /app/data /app/data/cache /app/data/exports /app/logs \
+    && useradd -m -r rehu \
+    && chown -R rehu:rehu /app \
+    && chmod +x /app/scripts/entrypoint.sh
 
 EXPOSE 8501 8080
 
@@ -43,4 +35,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
     CMD curl -sf http://localhost:8501/_stcore/health && \
         curl -sf http://localhost:8080/health || exit 1
 
-ENTRYPOINT ["bash", "scripts/entrypoint.sh"]
+ENTRYPOINT ["bash", "/app/scripts/entrypoint.sh"]
