@@ -7,12 +7,10 @@ ENV PYTHONUNBUFFERED=1 \
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
-    util-linux \
-    && rm -rf /var/lib/apt/lists/*
+    curl bash && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
-RUN pip install --default-timeout=300 --retries=10 -r requirements.txt
+RUN pip install -r requirements.txt
 
 COPY config/ config/
 COPY database/ database/
@@ -24,10 +22,8 @@ COPY scripts/ scripts/
 COPY utils/ utils/
 COPY app.py .
 
-RUN mkdir -p /app/data /app/data/cache /app/data/exports /app/logs \
-    && useradd -m -r rehu \
-    && chown -R rehu:rehu /app \
-    && chmod +x /app/scripts/entrypoint.sh
+# Ensure data directories exist and entrypoint is executable
+RUN mkdir -p /app/data/cache && chmod +x scripts/entrypoint.sh
 
 EXPOSE 8501 8080
 
@@ -35,4 +31,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
     CMD curl -sf http://localhost:8501/_stcore/health && \
         curl -sf http://localhost:8080/health || exit 1
 
-ENTRYPOINT ["bash", "/app/scripts/entrypoint.sh"]
+ENTRYPOINT ["bash", "scripts/entrypoint.sh"]
