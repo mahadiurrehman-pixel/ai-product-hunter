@@ -7,7 +7,9 @@ ENV PYTHONUNBUFFERED=1 \
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl && rm -rf /var/lib/apt/lists/*
+    curl \
+    util-linux \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
 RUN pip install --default-timeout=300 --retries=10 -r requirements.txt
@@ -26,7 +28,14 @@ RUN mkdir -p /app/data && \
     chmod +x scripts/entrypoint.sh 2>/dev/null || true
 
 RUN useradd -m -r rehu && chown -R rehu:rehu /app
-USER rehu
+
+EXPOSE 8501 8080
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+    CMD curl -sf http://localhost:8501/_stcore/health && \
+        curl -sf http://localhost:8080/health || exit 1
+
+ENTRYPOINT ["bash", "scripts/entrypoint.sh"]
 
 EXPOSE 8501 8080
 
