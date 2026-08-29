@@ -1,0 +1,353 @@
+# =============================================================================
+# Brand database for REHU product normalization
+#
+# Format:
+#   canonical_name:
+#     aliases: [lowercase aliases including the canonical name]
+#     categories: [product categories this brand is known for]
+#
+# Adding a new brand:
+#   1. Add canonical name as key
+#   2. Add all known aliases/misspellings
+#   3. Add relevant categories
+#
+# This file replaces the hardcoded KNOWN_BRANDS set in normalizer.py
+# =============================================================================
+
+# --- Electronics ---
+Apple:
+  aliases: [apple, airpods, airpod, macbook, imac]
+  categories: [electronics, audio, computers]
+
+Samsung:
+  aliases: [samsung, galaxy]
+  categories: [electronics, phones, audio]
+
+Sony:
+  aliases: [sony, playstation, ps5]
+  categories: [electronics, audio, gaming]
+
+LG:
+  aliases: [lg]
+  categories: [electronics]
+
+Dell:
+  aliases: [dell, alienware]
+  categories: [computers]
+
+HP:
+  aliases: [hp, hewlett packard]
+  categories: [computers]
+
+Lenovo:
+  aliases: [lenovo, thinkpad, ideapad]
+  categories: [computers]
+
+Asus:
+  aliases: [asus, rog]
+  categories: [computers, electronics]
+
+Acer:
+  aliases: [acer, predator]
+  categories: [computers]
+
+Microsoft:
+  aliases: [microsoft, surface, xbox]
+  categories: [computers, gaming]
+
+Google:
+  aliases: [google, pixel, nest, chromecast]
+  categories: [electronics, phones]
+
+Amazon:
+  aliases: [amazon, kindle, echo, alexa, fire]
+  categories: [electronics]
+
+# --- Audio ---
+Bose:
+  aliases: [bose]
+  categories: [audio]
+
+JBL:
+  aliases: [jbl]
+  categories: [audio]
+
+Beats:
+  aliases: [beats, beats by dre]
+  categories: [audio]
+
+Anker:
+  aliases: [anker, soundcore]
+  categories: [electronics, audio]
+
+Sennheiser:
+  aliases: [sennheiser]
+  categories: [audio]
+
+Audio-Technica:
+  aliases: [audio technica, audio-technica]
+  categories: [audio]
+
+Skullcandy:
+  aliases: [skullcandy]
+  categories: [audio]
+
+Jabra:
+  aliases: [jabra]
+  categories: [audio]
+
+# --- Phones ---
+Xiaomi:
+  aliases: [xiaomi, redmi, poco]
+  categories: [phones, electronics]
+
+Huawei:
+  aliases: [huawei, honor]
+  categories: [phones, electronics]
+
+OnePlus:
+  aliases: [oneplus, one plus]
+  categories: [phones]
+
+Motorola:
+  aliases: [motorola, moto]
+  categories: [phones]
+
+Nokia:
+  aliases: [nokia]
+  categories: [phones]
+
+Oppo:
+  aliases: [oppo]
+  categories: [phones]
+
+Realme:
+  aliases: [realme]
+  categories: [phones]
+
+Nothing:
+  aliases: [nothing]
+  categories: [phones, audio]
+
+# --- Computers / Peripherals ---
+Logitech:
+  aliases: [logitech, logi]
+  categories: [computers, peripherals]
+
+Razer:
+  aliases: [razer]
+  categories: [gaming, peripherals]
+
+Corsair:
+  aliases: [corsair]
+  categories: [gaming, computers]
+
+SteelSeries:
+  aliases: [steelseries]
+  categories: [gaming, peripherals]
+
+HyperX:
+  aliases: [hyperx]
+  categories: [gaming, audio]
+
+# --- Storage ---
+Kingston:
+  aliases: [kingston]
+  categories: [storage]
+
+SanDisk:
+  aliases: [sandisk]
+  categories: [storage]
+
+Seagate:
+  aliases: [seagate]
+  categories: [storage]
+
+Western Digital:
+  aliases: [western digital, wd]
+  categories: [storage]
+
+Crucial:
+  aliases: [crucial]
+  categories: [storage, computers]
+
+# --- Processors / Graphics ---
+Intel:
+  aliases: [intel, core i5, core i7, core i9]
+  categories: [computers]
+
+AMD:
+  aliases: [amd, ryzen, radeon]
+  categories: [computers]
+
+Nvidia:
+  aliases: [nvidia, geforce, rtx, gtx]
+  categories: [computers]
+
+# --- Camera ---
+Canon:
+  aliases: [canon, eos]
+  categories: [cameras]
+
+Nikon:
+  aliases: [nikon, nikkor]
+  categories: [cameras]
+
+GoPro:
+  aliases: [gopro, go pro]
+  categories: [cameras]
+
+DJI:
+  aliases: [dji, mavic, osmo]
+  categories: [cameras, drones]
+
+Fujifilm:
+  aliases: [fujifilm, fuji, instax]
+  categories: [cameras]
+
+# --- Fashion ---
+Nike:
+  aliases: [nike, air max, air jordan, jordan]
+  categories: [fashion, sports]
+
+Adidas:
+  aliases: [adidas, yeezy]
+  categories: [fashion, sports]
+
+New Balance:
+  aliases: [new balance, nb]
+  categories: [fashion, sports]
+
+Puma:
+  aliases: [puma]
+  categories: [fashion, sports]
+
+Under Armour:
+  aliases: [under armour, under armor, ua]
+  categories: [fashion, sports]
+
+The North Face:
+  aliases: [north face, the north face, tnf]
+  categories: [fashion, outdoor]
+
+Columbia:
+  aliases: [columbia]
+  categories: [fashion, outdoor]
+
+# --- Luxury ---
+Louis Vuitton:
+  aliases: [louis vuitton, lv]
+  categories: [luxury, fashion]
+
+Gucci:
+  aliases: [gucci]
+  categories: [luxury, fashion]
+
+Chanel:
+  aliases: [chanel]
+  categories: [luxury, fashion]
+
+Prada:
+  aliases: [prada]
+  categories: [luxury, fashion]
+
+Hermes:
+  aliases: [hermes, hermès]
+  categories: [luxury, fashion]
+
+Rolex:
+  aliases: [rolex]
+  categories: [luxury, watches]
+
+Omega:
+  aliases: [omega]
+  categories: [luxury, watches]
+
+Cartier:
+  aliases: [cartier]
+  categories: [luxury, watches]
+
+# --- Watches ---
+Casio:
+  aliases: [casio, g-shock, g shock]
+  categories: [watches]
+
+Garmin:
+  aliases: [garmin]
+  categories: [watches, fitness]
+
+Fitbit:
+  aliases: [fitbit]
+  categories: [watches, fitness]
+
+# --- Home ---
+Dyson:
+  aliases: [dyson]
+  categories: [home]
+
+iRobot:
+  aliases: [irobot, roomba]
+  categories: [home]
+
+Philips:
+  aliases: [philips, hue]
+  categories: [home, electronics]
+
+Panasonic:
+  aliases: [panasonic]
+  categories: [electronics, home]
+
+# --- Gaming ---
+Nintendo:
+  aliases: [nintendo, switch, amiibo]
+  categories: [gaming]
+
+Valve:
+  aliases: [valve, steam deck]
+  categories: [gaming]
+
+# --- Collectibles ---
+Pokemon:
+  aliases: [pokemon, pokémon]
+  categories: [collectibles, gaming]
+
+Magic The Gathering:
+  aliases: [magic the gathering, mtg]
+  categories: [collectibles]
+
+# --- Other ---
+Supreme:
+  aliases: [supreme]
+  categories: [fashion, streetwear]
+
+Off-White:
+  aliases: [off-white, off white]
+  categories: [fashion, streetwear]
+
+Lego:
+  aliases: [lego]
+  categories: [toys]
+
+KitchenAid:
+  aliases: [kitchenaid, kitchen aid]
+  categories: [home, kitchen]
+
+Instant Pot:
+  aliases: [instant pot, instapot]
+  categories: [home, kitchen]
+
+Yeti:
+  aliases: [yeti]
+  categories: [outdoor]
+
+Stanley:
+  aliases: [stanley]
+  categories: [outdoor]
+
+Crocs:
+  aliases: [crocs]
+  categories: [fashion]
+
+Birkenstock:
+  aliases: [birkenstock]
+  categories: [fashion]

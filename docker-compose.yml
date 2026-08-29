@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  rehu:
+    build: .
+    container_name: rehu-platform
+    restart: unless-stopped
+    ports:
+      - "8501:8501"
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=sqlite:////app/data/product_hunter.db
+      - COMPLIANCE_PORT=8080
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8501/_stcore/health && curl -sf http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s

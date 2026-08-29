@@ -1,0 +1,988 @@
+# =============================================================================
+# REHU Canonical Product Taxonomy
+#
+# Each product type has:
+#   aliases: keywords that map to this type (longer = higher match priority)
+#   category: parent category group
+#   priority: higher = more specific (wins in conflicts)
+#   parent: parent node in taxonomy hierarchy
+#   role: product role (device|accessory|replacement_part|consumable|
+#         component|bundle|kit|unknown)
+#   compatible_categories: for accessories, what device categories they support
+#   related_types: semantically related but distinct product types
+#
+# Adding a new type: add an entry here with aliases, category, priority,
+# parent, and role. No Python code changes required.
+# =============================================================================
+
+# --- DEVICES ---
+smartphone:
+  aliases: [smartphone, phone, cell phone, mobile phone, cellphone, iphone, android phone]
+  category: electronics
+  priority: 80
+  parent: devices
+  role: device
+  compatible_categories: []
+  related_types: [tablet, phone_case, screen_protector, charger]
+
+tablet:
+  aliases: [tablet, ipad, android tablet, slate]
+  category: electronics
+  priority: 80
+  parent: devices
+  role: device
+  compatible_categories: []
+  related_types: [smartphone, tablet_case]
+
+laptop:
+  aliases: [laptop, notebook, ultrabook, chromebook, macbook]
+  category: computers
+  priority: 85
+  parent: devices
+  role: device
+  compatible_categories: []
+  related_types: [desktop, laptop_stand, laptop_case]
+
+desktop:
+  aliases: [desktop, desktop computer, pc, tower, mini pc]
+  category: computers
+  priority: 85
+  parent: devices
+  role: device
+  compatible_categories: []
+  related_types: [laptop, monitor]
+
+monitor:
+  aliases: [monitor, pc monitor, computer monitor, display monitor]
+  category: computers
+  priority: 85
+  parent: devices
+  role: device
+  compatible_categories: []
+  related_types: [desktop, laptop]
+
+earbuds:
+  aliases: [earbuds, earphones, ear buds, ear phones, in-ear, in ear, tws, airpods, air pods, galaxy buds, pixel buds]
+  category: audio
+  priority: 90
+  parent: devices
+  role: device
+  compatible_categories: []
+  related_types: [headphones, ear_tips, earbuds_case]
+
+headphones:
+  aliases: [headphones, headphone, over-ear, over ear, on-ear, on ear]
+  category: audio
+  priority: 90
+  parent: devices
+  role: device
+  compatible_categories: []
+  related_types: [earbuds, ear_pads, headphone_stand]
+
+speaker:
+  aliases: [speaker, speakers, soundbar, sound bar, portable speaker, bluetooth speaker]
+  category: audio
+  priority: 85
+  parent: devices
+  role: device
+  compatible_categories: []
+  related_types: [earbuds, headphones]
+
+microphone:
+  aliases: [microphone, mic, condenser mic, usb mic, lavalier]
+  category: audio
+  priority: 85
+  parent: devices
+  role: device
+  compatible_categories: []
+  related_types: [headphones]
+
+camera:
+  aliases: [camera, dslr, mirrorless, digital camera, action camera]
+  category: cameras
+  priority: 85
+  parent: devices
+  role: device
+  compatible_categories: []
+  related_types: [drone, camera_lens, camera_battery]
+
+drone:
+  aliases: [drone, quadcopter, fpv drone]
+  category: drones
+  priority: 90
+  parent: devices
+  role: device
+  compatible_categories: []
+  related_types: [camera, drone_battery]
+
+game_console:
+  aliases: [console, game console, playstation, ps5, ps4, xbox, nintendo switch, switch]
+  category: gaming
+  priority: 85
+  parent: devices
+  role: device
+  compatible_categories: []
+  related_types: [gaming_controller]
+
+smartwatch:
+  aliases: [smartwatch, smart watch, fitness tracker, fitness band, activity tracker]
+  category: wearables
+  priority: 85
+  parent: devices
+  role: device
+  compatible_categories: []
+  related_types: [watch_band]
+
+# --- ACCESSORIES ---
+phone_case:
+  aliases: [phone case, case, cover, bumper, protective case, silicone case, clear case, mobile case, cellphone case, smartphone case, phone cover, mobile cover]
+  category: accessories
+  priority: 95
+  parent: accessories
+  role: accessory
+  compatible_categories: [smartphone]
+  related_types: [screen_protector, smartphone]
+
+screen_protector:
+  aliases: [screen protector, tempered glass, glass protector, screen guard, screen film, display protector]
+  category: accessories
+  priority: 95
+  parent: accessories
+  role: accessory
+  compatible_categories: [smartphone, tablet]
+  related_types: [phone_case, smartphone]
+
+charger:
+  aliases: [charger, wall charger, fast charger, wireless charger, charging adapter, power adapter, phone charger]
+  category: accessories
+  priority: 90
+  parent: accessories
+  role: accessory
+  compatible_categories: [smartphone, tablet, laptop]
+  related_types: [charging_cable, power_bank]
+
+charging_cable:
+  aliases: [cable, cord, usb cable, charging cable, lightning cable, usb-c cable, hdmi cable, charge cable, charging cord]
+  category: accessories
+  priority: 90
+  parent: accessories
+  role: accessory
+  compatible_categories: [smartphone, tablet, laptop]
+  related_types: [charger, adapter]
+
+power_bank:
+  aliases: [power bank, portable charger, battery pack, external battery]
+  category: accessories
+  priority: 90
+  parent: accessories
+  role: accessory
+  compatible_categories: [smartphone, tablet]
+  related_types: [charger, charging_cable]
+
+adapter:
+  aliases: [adapter, hub, usb hub, usb-c hub, dongle, multiport, docking station]
+  category: accessories
+  priority: 90
+  parent: accessories
+  role: component
+  compatible_categories: [laptop, desktop, smartphone]
+  related_types: [charging_cable, charger]
+
+laptop_stand:
+  aliases: [laptop stand, notebook stand, laptop riser, laptop holder]
+  category: accessories
+  priority: 90
+  parent: accessories
+  role: accessory
+  compatible_categories: [laptop]
+  related_types: [laptop, monitor]
+
+phone_mount:
+  aliases: [phone mount, phone holder, car mount, car phone holder, phone stand]
+  category: accessories
+  priority: 90
+  parent: accessories
+  role: accessory
+  compatible_categories: [smartphone]
+  related_types: [phone_case, smartphone]
+
+earbuds_case:
+  aliases: [earbuds case, airpods case, earphone case, earbud cover]
+  category: accessories
+  priority: 95
+  parent: accessories
+  role: accessory
+  compatible_categories: [earbuds]
+  related_types: [earbuds, ear_tips]
+
+ear_tips:
+  aliases: [ear tips, earbuds tips, replacement tips, silicone tips, earbud tips]
+  category: accessories
+  priority: 95
+  parent: accessories
+  role: replacement_part
+  compatible_categories: [earbuds]
+  related_types: [earbuds, earbuds_case]
+
+ear_pads:
+  aliases: [ear pads, earpads, headphone pads, replacement pads, cushion pads]
+  category: accessories
+  priority: 95
+  parent: accessories
+  role: replacement_part
+  compatible_categories: [headphones]
+  related_types: [headphones]
+
+tablet_case:
+  aliases: [tablet case, ipad case, tablet cover, tablet sleeve]
+  category: accessories
+  priority: 95
+  parent: accessories
+  role: accessory
+  compatible_categories: [tablet]
+  related_types: [tablet, screen_protector]
+
+laptop_case:
+  aliases: [laptop case, laptop sleeve, laptop bag, notebook case, notebook sleeve]
+  category: accessories
+  priority: 95
+  parent: accessories
+  role: accessory
+  compatible_categories: [laptop]
+  related_types: [laptop, laptop_stand]
+
+watch_band:
+  aliases: [watch band, watch strap, watch bracelet, replacement band, watch band strap]
+  category: accessories
+  priority: 95
+  parent: accessories
+  role: accessory
+  compatible_categories: [smartwatch]
+  related_types: [smartwatch]
+
+# --- PERIPHERALS ---
+keyboard:
+  aliases: [keyboard, mechanical keyboard, wireless keyboard, gaming keyboard]
+  category: peripherals
+  priority: 85
+  parent: peripherals
+  role: device
+  compatible_categories: []
+  related_types: [mouse, desktop, laptop]
+
+mouse:
+  aliases: [mouse, wireless mouse, gaming mouse, ergonomic mouse, trackball]
+  category: peripherals
+  priority: 85
+  parent: peripherals
+  role: device
+  compatible_categories: []
+  related_types: [keyboard, desktop, laptop]
+
+webcam:
+  aliases: [webcam, web cam, web camera]
+  category: peripherals
+  priority: 85
+  parent: peripherals
+  role: device
+  compatible_categories: []
+  related_types: [laptop, desktop]
+
+gaming_controller:
+  aliases: [controller, gamepad, game controller, joystick]
+  category: gaming
+  priority: 80
+  parent: peripherals
+  role: device
+  compatible_categories: [game_console]
+  related_types: [game_console]
+
+# --- STORAGE ---
+ssd:
+  aliases: [ssd, solid state drive, nvme, m.2]
+  category: storage
+  priority: 85
+  parent: storage
+  role: component
+  compatible_categories: [laptop, desktop]
+  related_types: [hard_drive]
+
+hard_drive:
+  aliases: [hard drive, hdd, external hard drive, portable drive]
+  category: storage
+  priority: 85
+  parent: storage
+  role: component
+  compatible_categories: [laptop, desktop]
+  related_types: [ssd]
+
+memory_card:
+  aliases: [memory card, sd card, micro sd, microsd, flash drive, usb drive, thumb drive]
+  category: storage
+  priority: 80
+  parent: storage
+  role: component
+  compatible_categories: [camera, smartphone, drone]
+  related_types: [ssd]
+
+# --- HOME ---
+vacuum:
+  aliases: [vacuum, robot vacuum, vacuum cleaner, robovac]
+  category: home
+  priority: 85
+  parent: home
+  role: device
+  compatible_categories: []
+  related_types: []
+
+led_strip:
+  aliases: [led strip, led lights, strip lights, light strip, rgb strip, rgb lights]
+  category: home
+  priority: 80
+  parent: home
+  role: device
+  compatible_categories: []
+  related_types: []
+
+# --- REPLACEMENT PARTS ---
+replacement_battery:
+  aliases: [replacement battery, battery replacement, phone battery, laptop battery]
+  category: replacement_parts
+  priority: 95
+  parent: replacement_parts
+  role: replacement_part
+  compatible_categories: [smartphone, laptop, camera]
+  related_types: [charger]
+
+camera_battery:
+  aliases: [camera battery, dslr battery, camera charger battery]
+  category: replacement_parts
+  priority: 95
+  parent: replacement_parts
+  role: replacement_part
+  compatible_categories: [camera]
+  related_types: [camera, charger]
+
+drone_battery:
+  aliases: [drone battery, drone replacement battery]
+  category: replacement_parts
+  priority: 95
+  parent: replacement_parts
+  role: replacement_part
+  compatible_categories: [drone]
+  related_types: [drone]
+
+camera_lens:
+  aliases: [camera lens, lens, dslr lens, mirrorless lens]
+  category: replacement_parts
+  priority: 90
+  parent: replacement_parts
+  role: component
+  compatible_categories: [camera]
+  related_types: [camera]
+
+# --- CONSUMABLES ---
+printer_ink:
+  aliases: [printer ink, ink cartridge, toner, ink cartridge replacement]
+  category: consumables
+  priority: 90
+  parent: consumables
+  role: consumable
+  compatible_categories: []
+  related_types: []
+
+# --- BUNDLES & KITS ---
+bundle:
+  aliases: [bundle, combo, set, kit, pack bundle]
+  category: bundles
+  priority: 70
+  parent: bundles
+  role: bundle
+  compatible_categories: []
+  related_types: []
+
+repair_kit:
+  aliases: [repair kit, tool kit, phone repair kit, screen repair kit]
+  category: bundles
+  priority: 85
+  parent: bundles
+  role: kit
+  compatible_categories: [smartphone, tablet, laptop]
+  related_types: []
+
+# =============================================================================
+# REHU Canonical Product Taxonomy (Extended for Pre-Phase 6)
+#
+# Each product type now includes:
+#   critical_attributes: mismatch = strong rejection/penalty
+#   important_attributes: mismatch = significant penalty
+#   optional_attributes: mismatch = small penalty
+#   identifiers: strong identifier fields (MPN, UPC, etc.)
+# =============================================================================
+
+# --- DEVICES ---
+smartphone:
+  aliases: [smartphone, phone, cell phone, mobile phone, cellphone, iphone, android phone]
+  category: electronics
+  priority: 80
+  parent: devices
+  role: device
+  compatible_categories: []
+  related_types: [tablet, phone_case, screen_protector, charger]
+  critical_attributes: [brand, model]
+  important_attributes: [storage, memory, generation]
+  optional_attributes: [color, connectivity, condition]
+  identifiers: [mpn, upc, ean, gtin, model]
+
+tablet:
+  aliases: [tablet, ipad, android tablet, slate]
+  category: electronics
+  priority: 80
+  parent: devices
+  role: device
+  compatible_categories: []
+  related_types: [smartphone, tablet_case]
+  critical_attributes: [brand, model]
+  important_attributes: [storage, memory, size, generation]
+  optional_attributes: [color, connectivity, condition]
+  identifiers: [mpn, upc, ean, gtin, model]
+
+laptop:
+  aliases: [laptop, notebook, ultrabook, chromebook, macbook]
+  category: computers
+  priority: 85
+  parent: devices
+  role: device
+  compatible_categories: []
+  related_types: [desktop, laptop_stand, laptop_case]
+  critical_attributes: [brand, model]
+  important_attributes: [memory, storage, size, connectivity]
+  optional_attributes: [color, condition]
+  identifiers: [mpn, upc, ean, gtin, model]
+
+desktop:
+  aliases: [desktop, desktop computer, pc, tower, mini pc]
+  category: computers
+  priority: 85
+  parent: devices
+  role: device
+  compatible_categories: []
+  related_types: [laptop, monitor]
+  critical_attributes: [brand, model]
+  important_attributes: [memory, storage, connectivity]
+  optional_attributes: [color, condition]
+  identifiers: [mpn, upc, ean, model]
+
+monitor:
+  aliases: [monitor, pc monitor, computer monitor, display monitor]
+  category: computers
+  priority: 85
+  parent: devices
+  role: device
+  compatible_categories: []
+  related_types: [desktop, laptop]
+  critical_attributes: [brand, model]
+  important_attributes: [size, connectivity]
+  optional_attributes: [color, condition]
+  identifiers: [mpn, upc, ean, model]
+
+earbuds:
+  aliases: [earbuds, earphones, ear buds, ear phones, in-ear, in ear, tws, airpods, air pods, galaxy buds, pixel buds]
+  category: audio
+  priority: 90
+  parent: devices
+  role: device
+  compatible_categories: []
+  related_types: [headphones, ear_tips, earbuds_case]
+  critical_attributes: [brand, model]
+  important_attributes: [connectivity, generation]
+  optional_attributes: [color, condition, battery_capacity]
+  identifiers: [mpn, upc, ean, model]
+
+headphones:
+  aliases: [headphones, headphone, over-ear, over ear, on-ear, on ear]
+  category: audio
+  priority: 90
+  parent: devices
+  role: device
+  compatible_categories: []
+  related_types: [earbuds, ear_pads, headphone_stand]
+  critical_attributes: [brand, model]
+  important_attributes: [connectivity, generation]
+  optional_attributes: [color, condition]
+  identifiers: [mpn, upc, ean, model]
+
+speaker:
+  aliases: [speaker, speakers, soundbar, sound bar, portable speaker, bluetooth speaker]
+  category: audio
+  priority: 85
+  parent: devices
+  role: device
+  compatible_categories: []
+  related_types: [earbuds, headphones]
+  critical_attributes: [brand, model]
+  important_attributes: [connectivity]
+  optional_attributes: [color, condition, battery_capacity]
+  identifiers: [mpn, upc, ean, model]
+
+microphone:
+  aliases: [microphone, mic, condenser mic, usb mic, lavalier]
+  category: audio
+  priority: 85
+  parent: devices
+  role: device
+  compatible_categories: []
+  related_types: [headphones]
+  critical_attributes: [brand, model]
+  important_attributes: [connectivity]
+  optional_attributes: [color, condition]
+  identifiers: [mpn, upc, ean, model]
+
+camera:
+  aliases: [camera, dslr, mirrorless, digital camera, action camera]
+  category: cameras
+  priority: 85
+  parent: devices
+  role: device
+  compatible_categories: []
+  related_types: [drone, camera_lens, camera_battery]
+  critical_attributes: [brand, model]
+  important_attributes: [generation]
+  optional_attributes: [color, condition]
+  identifiers: [mpn, upc, ean, model]
+
+drone:
+  aliases: [drone, quadcopter, fpv drone]
+  category: drones
+  priority: 90
+  parent: devices
+  role: device
+  compatible_categories: []
+  related_types: [camera, drone_battery]
+  critical_attributes: [brand, model]
+  important_attributes: [generation]
+  optional_attributes: [color, condition]
+  identifiers: [mpn, upc, ean, model]
+
+game_console:
+  aliases: [console, game console, playstation, ps5, ps4, xbox, nintendo switch, switch]
+  category: gaming
+  priority: 85
+  parent: devices
+  role: device
+  compatible_categories: []
+  related_types: [gaming_controller]
+  critical_attributes: [brand, model]
+  important_attributes: [generation, storage]
+  optional_attributes: [color, condition]
+  identifiers: [mpn, upc, ean, model]
+
+smartwatch:
+  aliases: [smartwatch, smart watch, fitness tracker, fitness band, activity tracker]
+  category: wearables
+  priority: 85
+  parent: devices
+  role: device
+  compatible_categories: []
+  related_types: [watch_band]
+  critical_attributes: [brand, model]
+  important_attributes: [generation, connectivity, size]
+  optional_attributes: [color, condition]
+  identifiers: [mpn, upc, ean, model]
+
+# --- ACCESSORIES ---
+phone_case:
+  aliases: [phone case, case, cover, bumper, protective case, silicone case, clear case, mobile case, cellphone case, smartphone case, phone cover, mobile cover]
+  category: accessories
+  priority: 95
+  parent: accessories
+  role: accessory
+  compatible_categories: [smartphone]
+  related_types: [screen_protector, smartphone]
+  critical_attributes: [product_type, compatible_models]
+  important_attributes: [brand, model]
+  optional_attributes: [color, material, condition]
+  identifiers: [mpn, upc, ean]
+
+screen_protector:
+  aliases: [screen protector, tempered glass, glass protector, screen guard, screen film, display protector]
+  category: accessories
+  priority: 95
+  parent: accessories
+  role: accessory
+  compatible_categories: [smartphone, tablet]
+  related_types: [phone_case, smartphone]
+  critical_attributes: [product_type, compatible_models]
+  important_attributes: [brand, model, size]
+  optional_attributes: [material, condition]
+  identifiers: [mpn, upc, ean]
+
+charger:
+  aliases: [charger, wall charger, fast charger, wireless charger, charging adapter, power adapter, phone charger]
+  category: accessories
+  priority: 90
+  parent: accessories
+  role: accessory
+  compatible_categories: [smartphone, tablet, laptop]
+  related_types: [charging_cable, power_bank]
+  critical_attributes: [product_type, connectivity]
+  important_attributes: [wattage, brand]
+  optional_attributes: [color, condition]
+  identifiers: [mpn, upc, ean]
+
+charging_cable:
+  aliases: [cable, cord, usb cable, charging cable, lightning cable, usb-c cable, hdmi cable, charge cable, charging cord]
+  category: accessories
+  priority: 90
+  parent: accessories
+  role: accessory
+  compatible_categories: [smartphone, tablet, laptop]
+  related_types: [charger, adapter]
+  critical_attributes: [product_type, connectivity]
+  important_attributes: [length]
+  optional_attributes: [color, material, condition]
+  identifiers: [mpn, upc, ean]
+
+power_bank:
+  aliases: [power bank, portable charger, battery pack, external battery]
+  category: accessories
+  priority: 90
+  parent: accessories
+  role: accessory
+  compatible_categories: [smartphone, tablet]
+  related_types: [charger, charging_cable]
+  critical_attributes: [product_type, battery_capacity]
+  important_attributes: [brand, connectivity]
+  optional_attributes: [color, condition]
+  identifiers: [mpn, upc, ean]
+
+adapter:
+  aliases: [adapter, hub, usb hub, usb-c hub, dongle, multiport, docking station]
+  category: accessories
+  priority: 90
+  parent: accessories
+  role: component
+  compatible_categories: [laptop, desktop, smartphone]
+  related_types: [charging_cable, charger]
+  critical_attributes: [product_type, connectivity]
+  important_attributes: [brand]
+  optional_attributes: [color, condition]
+  identifiers: [mpn, upc, ean]
+
+laptop_stand:
+  aliases: [laptop stand, notebook stand, laptop riser, laptop holder]
+  category: accessories
+  priority: 90
+  parent: accessories
+  role: accessory
+  compatible_categories: [laptop]
+  related_types: [laptop, monitor]
+  critical_attributes: [product_type]
+  important_attributes: [size, material]
+  optional_attributes: [color, condition]
+  identifiers: [mpn, upc, ean]
+
+phone_mount:
+  aliases: [phone mount, phone holder, car mount, car phone holder, phone stand]
+  category: accessories
+  priority: 90
+  parent: accessories
+  role: accessory
+  compatible_categories: [smartphone]
+  related_types: [phone_case, smartphone]
+  critical_attributes: [product_type]
+  important_attributes: [compatible_models]
+  optional_attributes: [color, condition]
+  identifiers: [mpn, upc, ean]
+
+earbuds_case:
+  aliases: [earbuds case, airpods case, earphone case, earbud cover]
+  category: accessories
+  priority: 95
+  parent: accessories
+  role: accessory
+  compatible_categories: [earbuds]
+  related_types: [earbuds, ear_tips]
+  critical_attributes: [product_type, compatible_models]
+  important_attributes: [brand, model]
+  optional_attributes: [color, material, condition]
+  identifiers: [mpn, upc, ean]
+
+ear_tips:
+  aliases: [ear tips, earbuds tips, replacement tips, silicone tips, earbud tips]
+  category: accessories
+  priority: 95
+  parent: accessories
+  role: replacement_part
+  compatible_categories: [earbuds]
+  related_types: [earbuds, earbuds_case]
+  critical_attributes: [product_type, compatible_models]
+  important_attributes: [size, material]
+  optional_attributes: [color, condition]
+  identifiers: [mpn, upc, ean]
+
+ear_pads:
+  aliases: [ear pads, earpads, headphone pads, replacement pads, cushion pads]
+  category: accessories
+  priority: 95
+  parent: accessories
+  role: replacement_part
+  compatible_categories: [headphones]
+  related_types: [headphones]
+  critical_attributes: [product_type, compatible_models]
+  important_attributes: [size, material]
+  optional_attributes: [color, condition]
+  identifiers: [mpn, upc, ean]
+
+tablet_case:
+  aliases: [tablet case, ipad case, tablet cover, tablet sleeve]
+  category: accessories
+  priority: 95
+  parent: accessories
+  role: accessory
+  compatible_categories: [tablet]
+  related_types: [tablet, screen_protector]
+  critical_attributes: [product_type, compatible_models]
+  important_attributes: [brand, model, size]
+  optional_attributes: [color, material, condition]
+  identifiers: [mpn, upc, ean]
+
+laptop_case:
+  aliases: [laptop case, laptop sleeve, laptop bag, notebook case, notebook sleeve]
+  category: accessories
+  priority: 95
+  parent: accessories
+  role: accessory
+  compatible_categories: [laptop]
+  related_types: [laptop, laptop_stand]
+  critical_attributes: [product_type, compatible_models]
+  important_attributes: [brand, model, size]
+  optional_attributes: [color, material, condition]
+  identifiers: [mpn, upc, ean]
+
+watch_band:
+  aliases: [watch band, watch strap, watch bracelet, replacement band, watch band strap]
+  category: accessories
+  priority: 95
+  parent: accessories
+  role: accessory
+  compatible_categories: [smartwatch]
+  related_types: [smartwatch]
+  critical_attributes: [product_type, compatible_models]
+  important_attributes: [size, material]
+  optional_attributes: [color, condition]
+  identifiers: [mpn, upc, ean]
+
+# --- PERIPHERALS ---
+keyboard:
+  aliases: [keyboard, mechanical keyboard, wireless keyboard, gaming keyboard]
+  category: peripherals
+  priority: 85
+  parent: peripherals
+  role: device
+  compatible_categories: []
+  related_types: [mouse, desktop, laptop]
+  critical_attributes: [brand, model]
+  important_attributes: [connectivity]
+  optional_attributes: [color, condition]
+  identifiers: [mpn, upc, ean, model]
+
+mouse:
+  aliases: [mouse, wireless mouse, gaming mouse, ergonomic mouse, trackball]
+  category: peripherals
+  priority: 85
+  parent: peripherals
+  role: device
+  compatible_categories: []
+  related_types: [keyboard, desktop, laptop]
+  critical_attributes: [brand, model]
+  important_attributes: [connectivity]
+  optional_attributes: [color, condition]
+  identifiers: [mpn, upc, ean, model]
+
+webcam:
+  aliases: [webcam, web cam, web camera]
+  category: peripherals
+  priority: 85
+  parent: peripherals
+  role: device
+  compatible_categories: []
+  related_types: [laptop, desktop]
+  critical_attributes: [brand, model]
+  important_attributes: [connectivity]
+  optional_attributes: [color, condition]
+  identifiers: [mpn, upc, ean, model]
+
+gaming_controller:
+  aliases: [controller, gamepad, game controller, joystick]
+  category: gaming
+  priority: 80
+  parent: peripherals
+  role: device
+  compatible_categories: [game_console]
+  related_types: [game_console]
+  critical_attributes: [brand, model]
+  important_attributes: [connectivity, compatible_models]
+  optional_attributes: [color, condition]
+  identifiers: [mpn, upc, ean, model]
+
+# --- STORAGE ---
+ssd:
+  aliases: [ssd, solid state drive, nvme, m.2]
+  category: storage
+  priority: 85
+  parent: storage
+  role: component
+  compatible_categories: [laptop, desktop]
+  related_types: [hard_drive]
+  critical_attributes: [brand, storage, connectivity]
+  important_attributes: [model]
+  optional_attributes: [condition]
+  identifiers: [mpn, upc, ean, model]
+
+hard_drive:
+  aliases: [hard drive, hdd, external hard drive, portable drive]
+  category: storage
+  priority: 85
+  parent: storage
+  role: component
+  compatible_categories: [laptop, desktop]
+  related_types: [ssd]
+  critical_attributes: [brand, storage]
+  important_attributes: [model, connectivity]
+  optional_attributes: [condition]
+  identifiers: [mpn, upc, ean, model]
+
+memory_card:
+  aliases: [memory card, sd card, micro sd, microsd, flash drive, usb drive, thumb drive]
+  category: storage
+  priority: 80
+  parent: storage
+  role: component
+  compatible_categories: [camera, smartphone, drone]
+  related_types: [ssd]
+  critical_attributes: [storage, connectivity]
+  important_attributes: [brand]
+  optional_attributes: [condition]
+  identifiers: [mpn, upc, ean]
+
+# --- HOME ---
+vacuum:
+  aliases: [vacuum, robot vacuum, vacuum cleaner, robovac]
+  category: home
+  priority: 85
+  parent: home
+  role: device
+  compatible_categories: []
+  related_types: []
+  critical_attributes: [brand, model]
+  important_attributes: []
+  optional_attributes: [color, condition]
+  identifiers: [mpn, upc, ean, model]
+
+led_strip:
+  aliases: [led strip, led lights, strip lights, light strip, rgb strip, rgb lights]
+  category: home
+  priority: 80
+  parent: home
+  role: device
+  compatible_categories: []
+  related_types: []
+  critical_attributes: [product_type]
+  important_attributes: [length, connectivity]
+  optional_attributes: [color, condition]
+  identifiers: [mpn, upc, ean]
+
+# --- REPLACEMENT PARTS ---
+replacement_battery:
+  aliases: [replacement battery, battery replacement, phone battery, laptop battery]
+  category: replacement_parts
+  priority: 95
+  parent: replacement_parts
+  role: replacement_part
+  compatible_categories: [smartphone, laptop, camera]
+  related_types: [charger]
+  critical_attributes: [product_type, compatible_models, battery_capacity]
+  important_attributes: [brand]
+  optional_attributes: [condition]
+  identifiers: [mpn, upc, ean, part_number]
+
+camera_battery:
+  aliases: [camera battery, dslr battery, camera charger battery]
+  category: replacement_parts
+  priority: 95
+  parent: replacement_parts
+  role: replacement_part
+  compatible_categories: [camera]
+  related_types: [camera, charger]
+  critical_attributes: [product_type, compatible_models]
+  important_attributes: [brand, model]
+  optional_attributes: [condition]
+  identifiers: [mpn, upc, ean, part_number]
+
+drone_battery:
+  aliases: [drone battery, drone replacement battery]
+  category: replacement_parts
+  priority: 95
+  parent: replacement_parts
+  role: replacement_part
+  compatible_categories: [drone]
+  related_types: [drone]
+  critical_attributes: [product_type, compatible_models]
+  important_attributes: [brand, model]
+  optional_attributes: [condition]
+  identifiers: [mpn, upc, ean, part_number]
+
+camera_lens:
+  aliases: [camera lens, lens, dslr lens, mirrorless lens]
+  category: replacement_parts
+  priority: 90
+  parent: replacement_parts
+  role: component
+  compatible_categories: [camera]
+  related_types: [camera]
+  critical_attributes: [brand, model, compatible_models]
+  important_attributes: []
+  optional_attributes: [condition]
+  identifiers: [mpn, upc, ean]
+
+# --- CONSUMABLES ---
+printer_ink:
+  aliases: [printer ink, ink cartridge, toner, ink cartridge replacement]
+  category: consumables
+  priority: 90
+  parent: consumables
+  role: consumable
+  compatible_categories: []
+  related_types: []
+  critical_attributes: [brand, model, compatible_models]
+  important_attributes: [color]
+  optional_attributes: [condition]
+  identifiers: [mpn, upc, ean, part_number]
+
+# --- BUNDLES & KITS ---
+bundle:
+  aliases: [bundle, combo, set, kit, pack bundle]
+  category: bundles
+  priority: 70
+  parent: bundles
+  role: bundle
+  compatible_categories: []
+  related_types: []
+  critical_attributes: [product_type]
+  important_attributes: []
+  optional_attributes: [condition]
+  identifiers: [upc, ean]
+
+repair_kit:
+  aliases: [repair kit, tool kit, phone repair kit, screen repair kit]
+  category: bundles
+  priority: 85
+  parent: bundles
+  role: kit
+  compatible_categories: [smartphone, tablet, laptop]
+  related_types: []
+  critical_attributes: [product_type, compatible_models]
+  important_attributes: []
+  optional_attributes: [condition]
+  identifiers: [upc, ean]

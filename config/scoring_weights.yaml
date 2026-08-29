@@ -1,0 +1,104 @@
+# =============================================================================
+# Scoring Weights Configuration
+# =============================================================================
+# Configure how different factors contribute to the overall opportunity score
+# All weights must sum to 1.0
+# =============================================================================
+
+# Overall Opportunity Score Weights
+opportunity_score:
+  market_signals: 0.30
+  competition_signals: 0.20
+  economics_signals: 0.30
+  supplier_match_signals: 0.15
+  confidence_bonus: 0.05
+
+# Market Signals Sub-weights
+market_signals:
+  listing_activity: 0.60      # Number of active listings
+  estimated_sold: 0.30        # eBay's estimated sold quantity (when available)
+  watch_count: 0.10           # Future: requires eBay permission
+
+# Competition Signals Sub-weights
+competition_signals:
+  seller_quality: 0.30        # Average seller reputation
+  price_variance: 0.30        # Price stability/commoditization
+  shipping_competition: 0.25  # Free shipping prevalence
+  market_type: 0.15           # Fixed price vs auction mix
+
+# Economics Signals Sub-weights
+economics_signals:
+  profit_margin: 0.40         # Percentage margin
+  absolute_profit: 0.35       # Dollar profit amount
+  roi: 0.25                   # Return on investment
+
+# Supplier Match Signals Sub-weights
+supplier_match_signals:
+  match_confidence: 0.50      # Overall product match quality
+  supplier_rating: 0.30       # AliExpress supplier rating
+  attribute_similarity: 0.20  # Specific attribute matching
+
+# Scoring Thresholds
+thresholds:
+  excellent_score: 80         # Score >= 80 = Excellent opportunity
+  good_score: 65              # Score >= 65 = Good opportunity
+  moderate_score: 50          # Score >= 50 = Moderate opportunity
+  poor_score: 35              # Score < 35 = Poor opportunity
+  
+  high_confidence: 0.80       # Confidence >= 0.80 = High
+  medium_confidence: 0.60     # Confidence >= 0.60 = Medium
+  low_confidence: 0.40        # Confidence < 0.40 = Low
+
+# Market Size Interpretation (active listings count)
+market_size:
+  niche:
+    max: 10
+    score: 20
+    label: "Niche Market (Low Activity)"
+  
+  emerging:
+    min: 10
+    max: 50
+    score_range: [20, 60]
+    label: "Emerging Market"
+  
+  established:
+    min: 50
+    max: 200
+    score_range: [60, 100]
+    label: "Established Market"
+  
+  competitive:
+    min: 200
+    max: 1000
+    score_range: [100, 80]
+    label: "Competitive Market"
+  
+  saturated:
+    min: 1000
+    score_range: [80, 50]
+    label: "Saturated Market"
+
+# Price Variance Scoring (coefficient of variation)
+price_variance:
+  very_stable:
+    max_cv: 0.15
+    score: 100
+    label: "Highly Standardized Pricing"
+  
+  stable:
+    min_cv: 0.15
+    max_cv: 0.30
+    score_range: [100, 70]
+    label: "Stable Pricing"
+  
+  variable:
+    min_cv: 0.30
+    max_cv: 0.50
+    score_range: [70, 40]
+    label: "Variable Pricing"
+  
+  unstable:
+    min_cv: 0.50
+    score_range: [40, 20]
+    label: "Unstable Pricing"

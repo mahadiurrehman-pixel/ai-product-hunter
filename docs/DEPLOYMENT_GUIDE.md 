@@ -1,0 +1,16 @@
+# REHU Deployment Guide
+
+## Prerequisites
+
+- Docker 24+ and Docker Compose v2
+- eBay Production API credentials (App ID, Cert ID)
+- Domain name with DNS configured (for HTTPS)
+- 1GB RAM minimum, 10GB disk
+
+## Quick Start (Docker)
+
+```bash
+git clone <repo-url> rehu && cd rehu
+cp .env.example .env
+# Edit .env with your production credentials
+docker compose up -d --build

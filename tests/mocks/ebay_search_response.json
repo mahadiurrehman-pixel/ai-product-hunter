@@ -1,0 +1,216 @@
+{
+  "href": "https://api.ebay.com/buy/browse/v1/item_summary/search?q=wireless+earbuds&limit=5",
+  "total": 1523,
+  "next": "https://api.ebay.com/buy/browse/v1/item_summary/search?q=wireless+earbuds&limit=5&offset=5",
+  "limit": 5,
+  "offset": 0,
+  "itemSummaries": [
+    {
+      "itemId": "v1|334567891234|0",
+      "title": "Wireless Bluetooth Earbuds with Charging Case - Noise Cancelling",
+      "price": {
+        "value": "29.99",
+        "currency": "USD"
+      },
+      "image": {
+        "imageUrl": "https://i.ebayimg.com/images/g/abc123/s-l500.jpg"
+      },
+      "itemWebUrl": "https://www.ebay.com/itm/334567891234",
+      "condition": "New",
+      "categories": [
+        {
+          "categoryId": "15032",
+          "categoryName": "Portable Audio & Headphones"
+        }
+      ],
+      "seller": {
+        "username": "tech_deals_usa",
+        "feedbackPercentage": "98.5",
+        "feedbackScore": 4523
+      },
+      "buyingOptions": ["FIXED_PRICE"],
+      "shippingOptions": [
+        {
+          "shippingCostType": "FREE",
+          "shippingCost": {
+            "value": "0.00",
+            "currency": "USD"
+          }
+        }
+      ],
+      "itemLocation": {
+        "city": "Los Angeles",
+        "stateOrProvince": "CA",
+        "country": "US"
+      },
+      "estimatedAvailabilities": [
+        {
+          "estimatedAvailableQuantity": 25,
+          "estimatedSoldQuantity": 143
+        }
+      ]
+    },
+    {
+      "itemId": "v1|445678912345|0",
+      "title": "TWS Bluetooth 5.0 Earbuds Wireless Headphones Stereo",
+      "price": {
+        "value": "19.95",
+        "currency": "USD"
+      },
+      "image": {
+        "imageUrl": "https://i.ebayimg.com/images/g/def456/s-l500.jpg"
+      },
+      "itemWebUrl": "https://www.ebay.com/itm/445678912345",
+      "condition": "New",
+      "categories": [
+        {
+          "categoryId": "15032",
+          "categoryName": "Portable Audio & Headphones"
+        }
+      ],
+      "seller": {
+        "username": "electronics_outlet",
+        "feedbackPercentage": "99.2",
+        "feedbackScore": 8932
+      },
+      "buyingOptions": ["FIXED_PRICE"],
+      "shippingOptions": [
+        {
+          "shippingCostType": "FIXED",
+          "shippingCost": {
+            "value": "4.99",
+            "currency": "USD"
+          }
+        }
+      ],
+      "itemLocation": {
+        "city": "New York",
+        "stateOrProvince": "NY",
+        "country": "US"
+      }
+    },
+    {
+      "itemId": "v1|556789123456|0",
+      "title": "Premium Wireless Earbuds Active Noise Cancellation IPX7 Waterproof",
+      "price": {
+        "value": "49.99",
+        "currency": "USD"
+      },
+      "image": {
+        "imageUrl": "https://i.ebayimg.com/images/g/ghi789/s-l500.jpg"
+      },
+      "itemWebUrl": "https://www.ebay.com/itm/556789123456",
+      "condition": "New",
+      "categories": [
+        {
+          "categoryId": "15032",
+          "categoryName": "Portable Audio & Headphones"
+        }
+      ],
+      "seller": {
+        "username": "premium_audio_shop",
+        "feedbackPercentage": "97.8",
+        "feedbackScore": 2341
+      },
+      "buyingOptions": ["FIXED_PRICE"],
+      "shippingOptions": [
+        {
+          "shippingCostType": "FREE",
+          "shippingCost": {
+            "value": "0.00",
+            "currency": "USD"
+          }
+        }
+      ],
+      "itemLocation": {
+        "city": "Seattle",
+        "stateOrProvince": "WA",
+        "country": "US"
+      },
+      "product": {
+        "brand": "TechPro",
+        "aspects": {
+          "Brand": ["TechPro"],
+          "Type": ["Earbud (In Ear Canal)"],
+          "Connectivity": ["Bluetooth"],
+          "Features": ["Noise Cancellation", "Waterproof"]
+        }
+      },
+      "estimatedAvailabilities": [
+        {
+          "estimatedAvailableQuantity": 10,
+          "estimatedSoldQuantity": 67
+        }
+      ]
+    },
+    {
+      "itemId": "v1|667891234567|0",
+      "title": "Sport Wireless Earphones Bluetooth Running Headset",
+      "price": {
+        "value": "15.50",
+        "currency": "USD"
+      },
+      "image": {
+        "imageUrl": "https://i.ebayimg.com/images/g/jkl012/s-l500.jpg"
+      },
+      "itemWebUrl": "https://www.ebay.com/itm/667891234567",
+      "condition": "New",
+      "categories": [
+        {
+          "categoryId": "15032",
+          "categoryName": "Portable Audio & Headphones"
+        }
+      ],
+      "seller": {
+        "username": "sports_gear_direct",
+        "feedbackPercentage": "96.3",
+        "feedbackScore": 1523
+      },
+      "buyingOptions": ["FIXED_PRICE", "BEST_OFFER"],
+      "shippingOptions": [
+        {
+          "shippingCostType": "FIXED",
+          "shippingCost": {
+            "value": "2.99",
+            "currency": "USD"
+          }
+        }
+      ],
+      "itemLocation": {
+        "city": "Chicago",
+        "stateOrProvince": "IL",
+        "country": "US"
+      }
+    },
+    {
+      "itemId": "v1|778912345678|0",
+      "title": "True Wireless Stereo Earbuds In-Ear Headphones",
+      "price": {
+        "value": "12.99",
+        "currency": "USD"
+      },
+      "itemWebUrl": "https://www.ebay.com/itm/778912345678",
+      "condition": "New",
+      "categories": [
+        {
+          "categoryId": "15032",
+          "categoryName": "Portable Audio & Headphones"
+        }
+      ],
+      "seller": {
+        "username": "budget_electronics",
+        "feedbackPercentage": "95.1",
+        "feedbackScore": 892
+      },
+      "buyingOptions": ["FIXED_PRICE"],
+      "shippingOptions": [
+        {
+          "shippingCostType": "CALCULATED"
+        }
+      ],
+      "itemLocation": {
+        "country": "CN"
+      }
+    }
+  ]
+}
