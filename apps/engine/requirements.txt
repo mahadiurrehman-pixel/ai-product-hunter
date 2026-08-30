@@ -12,6 +12,7 @@ pyyaml==6.0.1
 # Database
 sqlalchemy==2.0.23
 alembic==1.13.0
+psycopg2-binary>=2.9.9
 
 # HTTP & APIs
 httpx==0.25.2
@@ -24,13 +25,17 @@ numpy==1.26.2
 # ML & Matching
 sentence-transformers==2.2.2
 scikit-learn==1.3.2
-torch==2.1.1  # Required by sentence-transformers
+
+# CPU-only PyTorch
+torch==2.1.1
+torchvision==0.16.1
 
 # UI
-streamlit>=1.30.0
-
+streamlit==1.41.1
 
 # Utilities
 tqdm==4.66.1
 
-psycopg2-binary>=2.9.9
+# API
+fastapi==0.115.6
+uvicorn[standard]==0.34.0

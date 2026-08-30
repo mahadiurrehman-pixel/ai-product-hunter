@@ -18,3 +18,4 @@ tests/
 .idea/
 *.log
 docs/
+node_modules/

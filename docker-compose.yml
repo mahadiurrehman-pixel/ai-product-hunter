@@ -1,39 +1,4 @@
-version: "3.8"
-
 services:
-  rehu:
-    build: .
-    container_name: rehu-platform
-    restart: unless-stopped
-    ports:
-      - "8501:8501"   # Streamlit
-      - "8080:8080"   # Compliance
-      - "8000:8000"   # Engine API (M1)
-    volumes:
-      - ./data:/app/data
-    env_file:
-      - .env
-    environment:
-      # Switch to postgresql://rehu:rehu_pass@postgres:5432/rehu_db
-      # when you're ready to test the Postgres migration locally.
-      - DATABASE_URL=sqlite:////app/data/product_hunter.db
-      - COMPLIANCE_PORT=8080
-    healthcheck:
-      test:
-        - CMD-SHELL
-        - >-
-          python -c "import urllib.request;
-          urllib.request.urlopen('http://localhost:8501/_stcore/health')" &&
-          python -c "import urllib.request;
-          urllib.request.urlopen('http://localhost:8000/health')"
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 30s
-    depends_on:
-      postgres:
-        condition: service_healthy
-
   postgres:
     image: postgres:15-alpine
     container_name: rehu-postgres
@@ -43,7 +8,7 @@ services:
       POSTGRES_PASSWORD: rehu_pass
       POSTGRES_DB: rehu_db
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -51,6 +16,46 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
+
+  engine:
+    build:
+      context: .
+      dockerfile: Dockerfile.engine
+    container_name: rehu-engine-python
+    restart: unless-stopped
+    ports:
+      - "8000:8000"   # Python Engine FastAPI
+      - "8501:8501"   # Streamlit UI
+      - "8080:8080"   # Compliance endpoint
+    volumes:
+      - ./apps/engine/data:/app/data
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=sqlite:////app/data/product_hunter.db
+      - INTERNAL_AUTH_SECRET=${INTERNAL_AUTH_SECRET}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: rehu-api-nestjs
+    restart: unless-stopped
+    ports:
+      - "3000:3000"   # NestJS API
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://rehu:rehu_pass@postgres:5432/rehu_db?schema=public
+      - ENGINE_URL=http://engine:8000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      engine:
+        condition: service_started
 
 volumes:
   pgdata:
