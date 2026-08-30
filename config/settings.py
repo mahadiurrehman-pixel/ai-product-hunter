@@ -55,7 +55,8 @@ class Settings(BaseSettings):
     # eBay Compliance (Required for Production keyset activation)
     ebay_verification_token: str = ""
     ebay_notification_endpoint_url: str = ""
-
+    # Internal Microservice Auth (Phase M1)
+    internal_auth_secret: str = "dev_internal_secret_change_in_production"
     @field_validator("ebay_marketplace_id")
     @classmethod
     def validate_marketplace_id(cls, v: str) -> str:

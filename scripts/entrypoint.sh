@@ -3,26 +3,45 @@ set -e
 
 echo "=== REHU Production Platform Starting ==="
 
-# 1. Create and grant permissions on volume mount
+# 1. Volume permissions
 mkdir -p /app/data /app/data/cache /app/data/backups /app/logs
 chmod -R 777 /app/data /app/data/cache /app/data/backups 2>/dev/null || true
 
-# 2. Initialize database schema
+# 2. Database init
 echo "--> Initializing database..."
 python -c "
-import sys
-sys.path.insert(0, '/app')
+import sys; sys.path.insert(0, '/app')
 from database import init_db
 init_db()
 print('Database initialized.')
 "
 
-# 3. Start eBay Compliance Server in background
+PIDS=""
+
+cleanup() {
+    echo "--> Shutting down all services..."
+    for pid in $PIDS; do
+        kill -TERM "$pid" 2>/dev/null || true
+    done
+    for pid in $PIDS; do
+        wait "$pid" 2>/dev/null || true
+    done
+    echo "--> All services stopped."
+    exit 0
+}
+trap cleanup SIGINT SIGTERM
+
+# 3. Compliance Server (port 8080)
 echo "--> Starting Compliance Server (port 8080)..."
 python scripts/run_compliance_server.py &
-COMPLIANCE_PID=$!
+PIDS="$PIDS $!"
 
-# 4. Start Streamlit UI in foreground
+# 4. Internal Engine API (port 8000) — Phase M1
+echo "--> Starting Internal Python Engine (port 8000)..."
+uvicorn engine_app:app --host 0.0.0.0 --port 8000 --log-level info &
+PIDS="$PIDS $!"
+
+# 5. Streamlit UI (port 8501)
 echo "--> Starting Streamlit UI (port 8501)..."
 streamlit run app.py \
     --server.port=8501 \
@@ -31,25 +50,20 @@ streamlit run app.py \
     --browser.gatherUsageStats=false \
     --theme.primaryColor="#2563EB" \
     --theme.backgroundColor="#F8FAFC" &
-STREAMLIT_PID=$!
-
-cleanup() {
-    echo "--> Shutting down..."
-    kill -TERM "$COMPLIANCE_PID" 2>/dev/null || true
-    kill -TERM "$STREAMLIT_PID" 2>/dev/null || true
-    wait "$COMPLIANCE_PID" 2>/dev/null || true
-    wait "$STREAMLIT_PID" 2>/dev/null || true
-    echo "--> All services stopped."
-    exit 0
-}
-
-trap cleanup SIGINT SIGTERM
+PIDS="$PIDS $!"
 
 echo "=== REHU Platform Ready ==="
 echo "  UI:         http://0.0.0.0:8501"
 echo "  Compliance: http://0.0.0.0:8080"
+echo "  Engine API: http://0.0.0.0:8000"
 
-wait -n "$COMPLIANCE_PID" "$STREAMLIT_PID"
-EXIT_CODE=$?
-echo "--> A service exited unexpectedly (code $EXIT_CODE). Shutting down."
-cleanup
+# Wait for ANY child to exit (POSIX-compatible loop)
+while true; do
+    for pid in $PIDS; do
+        if ! kill -0 "$pid" 2>/dev/null; then
+            echo "--> Process $pid exited unexpectedly."
+            cleanup
+        fi
+    done
+    sleep 2
+done

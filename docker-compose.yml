@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   rehu:
@@ -6,18 +6,51 @@ services:
     container_name: rehu-platform
     restart: unless-stopped
     ports:
-      - "8501:8501"
-      - "8080:8080"
+      - "8501:8501"   # Streamlit
+      - "8080:8080"   # Compliance
+      - "8000:8000"   # Engine API (M1)
     volumes:
       - ./data:/app/data
     env_file:
       - .env
     environment:
+      # Switch to postgresql://rehu:rehu_pass@postgres:5432/rehu_db
+      # when you're ready to test the Postgres migration locally.
       - DATABASE_URL=sqlite:////app/data/product_hunter.db
       - COMPLIANCE_PORT=8080
     healthcheck:
-      test: ["CMD-SHELL", "curl -sf http://localhost:8501/_stcore/health && curl -sf http://localhost:8080/health || exit 1"]
+      test:
+        - CMD-SHELL
+        - >-
+          python -c "import urllib.request;
+          urllib.request.urlopen('http://localhost:8501/_stcore/health')" &&
+          python -c "import urllib.request;
+          urllib.request.urlopen('http://localhost:8000/health')"
       interval: 30s
-      timeout: 5s
+      timeout: 10s
       retries: 3
-      start_period: 15s
+      start_period: 30s
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: rehu-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: rehu
+      POSTGRES_PASSWORD: rehu_pass
+      POSTGRES_DB: rehu_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rehu -d rehu_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  pgdata:
